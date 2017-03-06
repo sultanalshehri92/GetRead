@@ -1,18 +1,19 @@
 package com.example.sultan.getread.service;
 
-import com.example.sultan.getread.model.Data;
+
+import com.example.sultan.getread.model.User;
 
 import java.util.List;
 
-import retrofit.Call;
-import retrofit.http.GET;
+import retrofit2.Call;
+import retrofit2.http.GET;
 
 /**
- * Created by Sultan on 2/26/2017.
+ * Created by Sultan on 2/24/2017.
  */
 
 public interface APIService {
-
     @GET("users")
-    Call<List<Data>> getData();
+    Call<List<User>> getUserDetails();
+
 }
