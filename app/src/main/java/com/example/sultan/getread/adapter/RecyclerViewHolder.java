@@ -34,7 +34,7 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder{
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                listener.onItemClick(item);
+                listener.onItemClick(item, getAdapterPosition());
             }
         });
     }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.sultan.getread">
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -16,7 +17,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.UserActivity"></activity>
+        <activity android:name=".activity.UserActivity" />
+        <activity android:name=".activity.TasksActivity" />
+        <activity android:name=".activity.ToolBarActivity" />
+        <activity android:name=".activity.PostDetailedActivity" />
+        <activity android:name=".activity.PostsActivity" />
+        <activity android:name=".activity.PhotosActivity" />
+        <activity android:name=".activity.PhotoDetailedActivity"/>
     </application>
-
 </manifest>

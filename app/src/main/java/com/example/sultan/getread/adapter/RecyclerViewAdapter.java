@@ -41,7 +41,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
 
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, int position) {
-        holder.bind(item.get(position), listener);
+            holder.bind(item.get(position), listener);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
     }
 
     public interface OnItemClickListener {
-        void onItemClick(User item);
+        void onItemClick(User item, int position);
     }
 
 }

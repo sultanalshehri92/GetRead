@@ -1,14 +1,25 @@
 package com.example.sultan.getread.activity;
 
-import android.os.Bundle;
+import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.os.Bundle;
+
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.sultan.getread.R;
 import com.example.sultan.getread.model.Address;
 import com.example.sultan.getread.model.Company;
 import com.example.sultan.getread.model.Geo;
 import com.example.sultan.getread.model.User;
+import com.example.sultan.getread.network.ApiClient;
+import com.example.sultan.getread.service.APIService;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class UserActivity extends MainActivity{
 
@@ -17,7 +28,9 @@ public class UserActivity extends MainActivity{
     Address userAddress;
     Company userCompany;
     Geo userGeo;
-    private TextView name, username, email, idNu, address, phone, website, company;
+    int index, idNu;
+    private View user_tab, po_tab, photo_tab ,task_tab;
+    private TextView name, username, email, address, phone, website, company;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,14 +47,32 @@ public class UserActivity extends MainActivity{
 
         getDetails();
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.appbar);
+        toolbar.setTitle("User: " + idNu);
+        setSupportActionBar(toolbar);
+
+        getTabs();
+
         swipeContainer = (SwipeRefreshLayout)findViewById(R.id.activity_user);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getData();
-                getDetails();
-                swipeContainer.setRefreshing(false);
+            APIService service = ApiClient.getRetrofit().create(APIService.class);
+            Call<User> call = service.getUser(index);
+            call.enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    getDetails();
+                    Toast.makeText(UserActivity.this, "Updated", Toast.LENGTH_SHORT).show();
+                }
 
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+                    Toast.makeText(UserActivity.this, "Failed", Toast.LENGTH_LONG).show();
+                    username.setText(t.toString());
+                }
+            });
+            swipeContainer.setRefreshing(false);
             }
         });
     }
@@ -49,6 +80,9 @@ public class UserActivity extends MainActivity{
     private void getDetails(){
         if (getIntent().getExtras() != null) {
             user = getIntent().getExtras().getParcelable("u");
+            index = getIntent().getExtras().getInt("index");
+            idNu = index +1;
+
             userCompany = user.getCompany();
             userAddress = user.getAddress();
             userGeo = userAddress.getGeo();
@@ -62,6 +96,48 @@ public class UserActivity extends MainActivity{
             address.setText(userAddress.getAddress());
             address.append(userGeo.getGeo());
         }
+    }
+
+    private void getTabs(){
+        user_tab = (View) findViewById(R.id.user_tab);
+        user_tab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(UserActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        po_tab = (View) findViewById(R.id.po_tab);
+        po_tab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(UserActivity.this, PostsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        photo_tab = (View) findViewById(R.id.photo_tab);
+        photo_tab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(UserActivity.this, PhotosActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        task_tab = (View) findViewById(R.id.task_tab);
+        task_tab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(UserActivity.this, TasksActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
 }
