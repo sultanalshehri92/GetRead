@@ -18,13 +18,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static java.lang.String.valueOf;
+
 public class PostDetailedActivity extends PostsActivity{
 
     private SwipeRefreshLayout swipeContainer;
     Post post;
     int index;
-    private View user_tab, po_tab, photo_tab ,task_tab;
-    private TextView post_uId, post_id, title, body;
+    View user_tab, po_tab, photo_tab ,task_tab;
+    TextView post_uId, post_id, title, body;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +73,8 @@ public class PostDetailedActivity extends PostsActivity{
             post = getIntent().getExtras().getParcelable("p");
             index = getIntent().getExtras().getInt("index");
 
-            post_uId.setText(post.getUserId());
-            post_id.setText(post.getId());
+            post_uId.setText(valueOf(post.getUserId()));
+            post_id.setText(valueOf(post.getId()));
             title.setText(post.getTitle());
             body.setText(post.getBody());
         }

@@ -7,8 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,11 +17,7 @@ import android.widget.Toast;
 
 import com.example.sultan.getread.R;
 import com.example.sultan.getread.adapter.PhotoViewAdapter;
-import com.example.sultan.getread.adapter.PostViewAdapter;
-import com.example.sultan.getread.adapter.RecyclerViewAdapter;
 import com.example.sultan.getread.model.Photo;
-import com.example.sultan.getread.model.Post;
-import com.example.sultan.getread.model.User;
 import com.example.sultan.getread.network.ApiClient;
 import com.example.sultan.getread.service.APIService;
 
@@ -37,13 +33,27 @@ public class PhotosActivity extends AppCompatActivity {
     private ProgressDialog pDialog;
     private TextView text;
     private RecyclerView recyclerView;
+    private PhotoViewAdapter recyclerViewAdapter;
     private List<Photo> userList;
-    private View user_tab, po_tab, photo_tab ,task_tab;
+    private String searchQuery = "";
+    SearchView searchView;
+    View user_tab, po_tab, photo_tab ,task_tab;
+
+    APIService service = ApiClient.getRetrofit().create(APIService.class);
+    Call<List<Photo>> call;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo);
+
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.activity_photo);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getData();
+            }
+        });
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.appbar);
         toolbar.setTitle("Photos");
@@ -51,22 +61,14 @@ public class PhotosActivity extends AppCompatActivity {
 
         getTabs();
 
-        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.activity_photo);
-        swipeContainer.setOnRefreshListener(
-                new SwipeRefreshLayout.OnRefreshListener() {
-                    @Override
-                    public void onRefresh() {
-                        getData();
-                    }
-                }
-        );
-
         pDialog = new ProgressDialog(this);
         showpDialog();
 
         text = (TextView) findViewById(R.id.text_photo);
         recyclerView = (RecyclerView)findViewById(R.id.recycler_photo);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setHasFixedSize(true);
+
         getData();
 
     }
@@ -74,6 +76,26 @@ public class PhotosActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
+
+        MenuItem myActionMenuItem = menu.findItem(R.id.search_bar);
+        searchView = (SearchView) myActionMenuItem.getActionView();
+        searchView.setIconifiedByDefault(true);
+        searchView.setSubmitButtonEnabled(true);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchQuery = query;
+                getData();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                recyclerViewAdapter.filterList(newText);
+                return true;
+            }
+        });
+
         return true;
     }
 
@@ -81,10 +103,10 @@ public class PhotosActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.search_bar:
-                Log.i("ActionBar", "Nuevo!");
                 return true;
             case R.id.action_settings:
-                Log.i("ActionBar", "Settings!");;
+                return true;
+            case R.id.share:
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -92,29 +114,34 @@ public class PhotosActivity extends AppCompatActivity {
     }
 
     private void getData() {
-        APIService service = ApiClient.getRetrofit().create(APIService.class);
-        Call<List<Photo>> call = service.getPhotoDetails();
+        if (searchQuery.isEmpty())
+            call = service.getPhotoDetails();
+        else {
+            call = service.searchPhoto(searchQuery);
+            searchQuery = "";
+        }
+
         call.enqueue(new Callback<List<Photo>>() {
             @Override
             public void onResponse(Call<List<Photo>> call, Response<List<Photo>> response) {
                 userList = response.body();
-                recyclerView.setAdapter(new PhotoViewAdapter
-                    (userList, R.layout.photo_view_row, getApplicationContext(),
+                recyclerViewAdapter = new PhotoViewAdapter
+                    (userList, R.layout.photo_view_row, PhotosActivity.this,
                         new PhotoViewAdapter.OnItemClickListener() {
                             @Override
                             public void onItemClick(Photo item, int position) {
-                              /*  Intent intent = new Intent();
+                                Intent intent = new Intent();
                                 Bundle b = new Bundle();
-                                b.putParcelable("u", item);
+                                b.putParcelable("p", item);
                                 b.putInt("index", position);
                                 intent.putExtras(b);
                                 intent.setClass(PhotosActivity.this, PhotoDetailedActivity.class);
                                 startActivity(intent);
-                                */
+
                             }
                         }
-                    )
-                );
+                    );
+                recyclerView.setAdapter(recyclerViewAdapter);
                 hidepDialog();
                 swipeContainer.setRefreshing(false);
             }
@@ -128,7 +155,7 @@ public class PhotosActivity extends AppCompatActivity {
     }
 
     private void getTabs(){
-        user_tab = (View) findViewById(R.id.user_tab);
+        user_tab = findViewById(R.id.user_tab);
         user_tab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -138,7 +165,7 @@ public class PhotosActivity extends AppCompatActivity {
             }
         });
 
-        po_tab = (View) findViewById(R.id.po_tab);
+        po_tab = findViewById(R.id.po_tab);
         po_tab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -148,10 +175,10 @@ public class PhotosActivity extends AppCompatActivity {
             }
         });
 
-        photo_tab = (View) findViewById(R.id.photo_tab);
+        photo_tab = findViewById(R.id.photo_tab);
         photo_tab.setSelected(true);
 
-        task_tab = (View) findViewById(R.id.task_tab);
+        task_tab = findViewById(R.id.task_tab);
         task_tab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

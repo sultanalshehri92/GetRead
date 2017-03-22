@@ -14,8 +14,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,28 +29,28 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     private SwipeRefreshLayout swipeContainer;
     private ProgressDialog pDialog;
     private TextView text;
     private RecyclerView recyclerView;
+    private RecyclerViewAdapter recyclerViewAdapter;
     private List<User> userList;
-    private View user_tab, po_tab, photo_tab ,task_tab;
+    private String searchQuery = "";
+    SearchView searchView;
+    View user_tab, po_tab, photo_tab ,task_tab;
+
+    APIService service = ApiClient.getRetrofit().create(APIService.class);
+    Call<List<User>> call;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.appbar);
-        setSupportActionBar(toolbar);
-
-        getTabs();
-
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.activity_main);
-        swipeContainer.setOnRefreshListener(
-            new SwipeRefreshLayout.OnRefreshListener() {
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
                     getData();
@@ -58,12 +58,20 @@ public class MainActivity extends AppCompatActivity {
             }
         );
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.appbar);
+        toolbar.setTitle("Users");
+        setSupportActionBar(toolbar);
+
+        getTabs();
+
         pDialog = new ProgressDialog(this);
         showpDialog();
 
         text = (TextView) findViewById(R.id.text);
+
         recyclerView = (RecyclerView)findViewById(R.id.recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setHasFixedSize(true);
         getData();
 
     }
@@ -71,6 +79,26 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
+
+        MenuItem myActionMenuItem = menu.findItem(R.id.search_bar);
+        searchView = (SearchView) myActionMenuItem.getActionView();
+        searchView.setIconifiedByDefault(true);
+        searchView.setSubmitButtonEnabled(true);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchQuery = query;
+                getData();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                recyclerViewAdapter.filterList(newText);
+                return true;
+            }
+        });
+
         return true;
     }
 
@@ -78,10 +106,10 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.search_bar:
-                Log.i("ActionBar", "Nuevo!");
                 return true;
             case R.id.action_settings:
-                Log.i("ActionBar", "Settings!");;
+                return true;
+            case R.id.share:
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -89,14 +117,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getData() {
-        APIService service = ApiClient.getRetrofit().create(APIService.class);
-        Call<List<User>> call = service.getUserDetails();
+        if (searchQuery.isEmpty())
+            call = service.getUserDetails();
+        else {
+            call = service.searchUser(searchQuery);
+            searchQuery = "";
+        }
+
         call.enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
                 userList = response.body();
-                recyclerView.setAdapter(new RecyclerViewAdapter
-                    (userList, R.layout.recycler_view_row, getApplicationContext(),
+                recyclerViewAdapter = new RecyclerViewAdapter
+                    (userList, R.layout.recycler_view_row, MainActivity.this,
                         new RecyclerViewAdapter.OnItemClickListener() {
                             @Override
                             public void onItemClick(User item, int position) {
@@ -109,8 +142,9 @@ public class MainActivity extends AppCompatActivity {
                                 startActivity(intent);
                             }
                         }
-                    )
-                );
+                    );
+
+                recyclerView.setAdapter(recyclerViewAdapter);
                 hidepDialog();
                 swipeContainer.setRefreshing(false);
             }
@@ -163,6 +197,7 @@ public class MainActivity extends AppCompatActivity {
             pDialog.show();
             pDialog.setMessage("Loading...");
     }
+
     private void hidepDialog() {
         if (pDialog.isShowing())
             pDialog.dismiss();

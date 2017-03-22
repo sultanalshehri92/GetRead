@@ -7,8 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,14 +33,28 @@ public class TasksActivity extends AppCompatActivity {
     private ProgressDialog pDialog;
     private TextView text;
     private RecyclerView recyclerView;
+    private TaskViewAdapter recyclerViewAdapter;
     private List<Task> taskList;
+    private String searchQuery = "";
+    SearchView searchView;
+    View user_tab, po_tab, photo_tab, task_tab;
 
-    private View user_tab, po_tab, photo_tab, task_tab;
+    APIService service = ApiClient.getRetrofit().create(APIService.class);
+    Call<List<Task>> call;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
+
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.activity_task);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    getData();
+                }
+            }
+        );
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.appbar);
         toolbar.setTitle("Tasks");
@@ -48,28 +62,41 @@ public class TasksActivity extends AppCompatActivity {
 
         getTabs();
 
-        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.activity_task);
-        swipeContainer.setOnRefreshListener(
-                new SwipeRefreshLayout.OnRefreshListener() {
-                    @Override
-                    public void onRefresh() {
-                        getData();
-                    }
-                }
-        );
-
         pDialog = new ProgressDialog(this);
         showpDialog();
 
         text = (TextView) findViewById(R.id.task_text);
+
         recyclerView = (RecyclerView) findViewById(R.id.recycler_task);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setHasFixedSize(true);
+
         getData();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
+
+        MenuItem myActionMenuItem = menu.findItem(R.id.search_bar);
+        searchView = (SearchView) myActionMenuItem.getActionView();
+        searchView.setIconifiedByDefault(true);
+        searchView.setSubmitButtonEnabled(true);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchQuery = query;
+                getData();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                recyclerViewAdapter.filterList(newText);
+                return true;
+            }
+        });
+
         return true;
     }
 
@@ -77,11 +104,10 @@ public class TasksActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.search_bar:
-                Log.i("ActionBar", "Nuevo!");
                 return true;
             case R.id.action_settings:
-                Log.i("ActionBar", "Settings!");
-                ;
+                return true;
+            case R.id.share:
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -89,23 +115,25 @@ public class TasksActivity extends AppCompatActivity {
     }
 
     protected void getData() {
-        APIService service = ApiClient.getRetrofit().create(APIService.class);
-        Call<List<Task>> call = service.getTaskDetails();
-        call.enqueue(new Callback<List<Task>>() {
+        if (searchQuery.isEmpty())
+            call = service.getTaskDetails();
+        else {
+            call = service.searchTask(searchQuery);
+            searchQuery = "";
+        }
+            call.enqueue(new Callback<List<Task>>() {
             @Override
             public void onResponse(Call<List<Task>> call, Response<List<Task>> response) {
                 taskList = response.body();
-                recyclerView.setAdapter(new TaskViewAdapter
-                        (taskList, R.layout.task_view_row, getApplicationContext(),
-                                new TaskViewAdapter.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(Task item) {
+                recyclerViewAdapter = new TaskViewAdapter
+                    (taskList, R.layout.task_view_row, TasksActivity.this,
+                        new TaskViewAdapter.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(Task item) {}
+                        }
+                    );
 
-                                    }
-                                }
-                        )
-                );
-
+                recyclerView.setAdapter(recyclerViewAdapter);
                 hidepDialog();
                 swipeContainer.setRefreshing(false);
             }
@@ -120,7 +148,7 @@ public class TasksActivity extends AppCompatActivity {
     }
 
     private void getTabs() {
-        user_tab = (View) findViewById(R.id.user_tab);
+        user_tab = findViewById(R.id.user_tab);
         user_tab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,7 +158,7 @@ public class TasksActivity extends AppCompatActivity {
             }
         });
 
-        po_tab = (View) findViewById(R.id.po_tab);
+        po_tab = findViewById(R.id.po_tab);
         po_tab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,7 +168,7 @@ public class TasksActivity extends AppCompatActivity {
             }
         });
 
-        photo_tab = (View) findViewById(R.id.photo_tab);
+        photo_tab = findViewById(R.id.photo_tab);
         photo_tab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -150,7 +178,7 @@ public class TasksActivity extends AppCompatActivity {
             }
         });
 
-        task_tab = (View) findViewById(R.id.task_tab);
+        task_tab = findViewById(R.id.task_tab);
         task_tab.setSelected(true);
     }
 

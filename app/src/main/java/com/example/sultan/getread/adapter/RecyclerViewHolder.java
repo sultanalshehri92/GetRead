@@ -8,6 +8,8 @@ import android.widget.TextView;
 import com.example.sultan.getread.R;
 import com.example.sultan.getread.model.User;
 
+import static java.lang.String.valueOf;
+
 /**
  * Created by Sultan on 3/5/2017.
  */
@@ -15,7 +17,7 @@ import com.example.sultan.getread.model.User;
 public class RecyclerViewHolder extends RecyclerView.ViewHolder{
 
     LinearLayout dataLayout;
-    TextView name, username, email, idNu, address, phone, website, company;
+    TextView name, idNu, phone;
 
     public RecyclerViewHolder(View itemView) {
         super(itemView);
@@ -28,7 +30,7 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder{
 
     public void bind(final User item, final RecyclerViewAdapter.OnItemClickListener listener) {
 
-        idNu.setText(item.getId());
+        idNu.setText(valueOf(item.getId()));
         name.setText(item.getName());
         phone.setText(item.getPhone());
 

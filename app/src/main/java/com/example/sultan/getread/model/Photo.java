@@ -8,9 +8,9 @@ import com.google.gson.annotations.SerializedName;
 public class Photo implements Parcelable {
 
     @SerializedName("albumId")
-    private Integer albumId;
+    private int albumId;
     @SerializedName("id")
-    private Integer id;
+    private int id;
     @SerializedName("title")
     private String title;
     @SerializedName("url")
@@ -19,6 +19,8 @@ public class Photo implements Parcelable {
     private String thumbnailUrl;
 
     protected Photo(Parcel in) {
+        albumId = in.readInt();
+        id = in.readInt();
         title = in.readString();
         url = in.readString();
         thumbnailUrl = in.readString();
@@ -36,12 +38,12 @@ public class Photo implements Parcelable {
         }
     };
 
-    public String getAlbumId() {
-        return "#"+ albumId;
+    public int getAlbumId() {
+        return albumId;
     }
 
-    public String getId() {
-        return "#"+ id;
+    public int getId() {
+        return id;
     }
 
     public String getTitle() {
@@ -63,6 +65,8 @@ public class Photo implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(albumId);
+        dest.writeInt(id);
         dest.writeString(title);
         dest.writeString(url);
         dest.writeString(thumbnailUrl);

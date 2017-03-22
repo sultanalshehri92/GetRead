@@ -8,19 +8,19 @@ import com.google.gson.annotations.SerializedName;
 
 public class Task {
     @SerializedName("userId")
-    private Integer userId;
+    private int userId;
     @SerializedName("id")
-    private Integer id;
+    private int id;
     @SerializedName("title")
     private String title;
     @SerializedName("completed")
     private Boolean completed;
 
-    public String getUserId() {
-        return "#"+ userId;
+    public int getUserId() {
+        return userId;
     }
-    public String getId() {
-        return "#"+ id;
+    public int getId() {
+        return  id;
     }
     public String getTitle() {
         return title;

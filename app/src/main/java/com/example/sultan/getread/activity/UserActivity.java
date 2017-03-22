@@ -21,6 +21,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static java.lang.Integer.valueOf;
+
 public class UserActivity extends MainActivity{
 
     private SwipeRefreshLayout swipeContainer;
@@ -29,7 +31,7 @@ public class UserActivity extends MainActivity{
     Company userCompany;
     Geo userGeo;
     int index, idNu;
-    private View user_tab, po_tab, photo_tab ,task_tab;
+    View user_tab, po_tab, photo_tab ,task_tab;
     private TextView name, username, email, address, phone, website, company;
 
     @Override
@@ -48,7 +50,7 @@ public class UserActivity extends MainActivity{
         getDetails();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.appbar);
-        toolbar.setTitle("User: " + idNu);
+        toolbar.setTitle("User: " + (idNu + 1));
         setSupportActionBar(toolbar);
 
         getTabs();
@@ -81,7 +83,7 @@ public class UserActivity extends MainActivity{
         if (getIntent().getExtras() != null) {
             user = getIntent().getExtras().getParcelable("u");
             index = getIntent().getExtras().getInt("index");
-            idNu = index +1;
+            idNu = user.getId();
 
             userCompany = user.getCompany();
             userAddress = user.getAddress();

@@ -8,6 +8,8 @@ import android.widget.TextView;
 import com.example.sultan.getread.R;
 import com.example.sultan.getread.model.Post;
 
+import static java.lang.String.valueOf;
+
 
 /**
  * Created by Sultan on 3/5/2017.
@@ -29,8 +31,8 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
 
     public void bind(final Post item, final PostViewAdapter.OnItemClickListener listener) {
 
-        post_uId.setText(item.getUserId());
-        post_id.setText(item.getId());
+        post_uId.setText(valueOf(item.getUserId()));
+        post_id.setText(valueOf(item.getId()));
         title.setText(item.getTitle());
 
         itemView.setOnClickListener(new View.OnClickListener() {

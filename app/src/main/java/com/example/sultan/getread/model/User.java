@@ -15,7 +15,7 @@ import java.io.Serializable;
 public class User implements Parcelable{
 
     @SerializedName("id")
-    private Integer id;
+    private int id;
     @SerializedName("name")
     private String name;
     @SerializedName("username")
@@ -54,8 +54,8 @@ public class User implements Parcelable{
         }
     };
 
-    public String getId() {
-        return "#"+ id;
+    public int getId() {
+        return id;
     }
     public String getName() {
         return name;

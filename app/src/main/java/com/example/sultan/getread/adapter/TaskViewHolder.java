@@ -6,8 +6,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.sultan.getread.R;
-import com.example.sultan.getread.model.Post;
 import com.example.sultan.getread.model.Task;
+
+import static java.lang.String.valueOf;
 
 
 /**
@@ -31,8 +32,8 @@ public class TaskViewHolder extends RecyclerView.ViewHolder{
 
     public void bind(final Task item, final TaskViewAdapter.OnItemClickListener listener) {
 
-        task_uId.setText(item.getUserId());
-        task_id.setText(item.getId());
+        task_uId.setText(valueOf(item.getUserId()));
+        task_id.setText(valueOf(item.getId()));
         task_title.setText(item.getTitle());
         task_completed.setText(item.getCompleted());
 

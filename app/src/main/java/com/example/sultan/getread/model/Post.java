@@ -12,15 +12,17 @@ import com.google.gson.annotations.SerializedName;
 public class Post implements Parcelable {
 
     @SerializedName("userId")
-    private Integer userId;
+    private int userId;
     @SerializedName("id")
-    private Integer id;
+    private int id;
     @SerializedName("title")
     private String title;
     @SerializedName("body")
     private String body;
 
     protected Post(Parcel in) {
+        userId = in.readInt();
+        id = in.readInt();
         title = in.readString();
         body = in.readString();
     }
@@ -38,12 +40,12 @@ public class Post implements Parcelable {
     };
 
 
-    public String getUserId() {
-        return "#userId: "+ userId;
+    public int getUserId() {
+        return userId;
     }
 
-    public String getId() {
-        return "#postId: "+ id;
+    public int getId() {
+        return id;
     }
 
     public String getTitle() {
@@ -61,6 +63,8 @@ public class Post implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(userId);
+        dest.writeInt(id);
         dest.writeString(title);
         dest.writeString(body);
     }

@@ -1,8 +1,6 @@
 package com.example.sultan.getread.activity;
 
-import android.net.Uri;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
@@ -11,9 +9,9 @@ import android.widget.Toast;
 
 import com.example.sultan.getread.R;
 import com.example.sultan.getread.model.Photo;
-import com.example.sultan.getread.model.Post;
 import com.example.sultan.getread.network.ApiClient;
 import com.example.sultan.getread.service.APIService;
+import com.squareup.picasso.Picasso;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -23,10 +21,10 @@ public class PhotoDetailedActivity extends PhotosActivity {
 
     private SwipeRefreshLayout swipeContainer;
     Photo photo;
-    int index;
+    int index, idNu;
 
     private TextView albumId, photo_id, photo_title;
-    private ImageView thumbnailUrl;
+    private ImageView urlImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,14 +34,14 @@ public class PhotoDetailedActivity extends PhotosActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.appbar);
         setSupportActionBar(toolbar);
 
-        albumId = (TextView)findViewById(R.id.albumId);
-        photo_id = (TextView)findViewById(R.id.photo_id);
-        photo_title = (TextView)findViewById(R.id.photo_title);
-        thumbnailUrl = (ImageView)findViewById(R.id.thumbnailUrl);
+        albumId = (TextView)findViewById(R.id.album_Id);
+        photo_id = (TextView)findViewById(R.id.photoId);
+        photo_title = (TextView)findViewById(R.id.photoTitle);
+        urlImage = (ImageView)findViewById(R.id.url);
 
         getDetails();
 
-        swipeContainer = (SwipeRefreshLayout)findViewById(R.id.activity_post_detailed);
+        swipeContainer = (SwipeRefreshLayout)findViewById(R.id.activity_photo_detailed);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -53,7 +51,7 @@ public class PhotoDetailedActivity extends PhotosActivity {
                     @Override
                     public void onResponse(Call<Photo> call, Response<Photo> response) {
                         getDetails();
-                        Toast.makeText(PhotoDetailedActivity.this, "Updated", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PhotoDetailedActivity.this, "Failed", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -67,14 +65,23 @@ public class PhotoDetailedActivity extends PhotosActivity {
     }
 
     private void getDetails(){
-        if (getIntent().getExtras().getParcelable("p") != null) {
+        if (getIntent().getExtras() != null) {
             photo = getIntent().getExtras().getParcelable("p");
             index = getIntent().getExtras().getInt("index");
+            idNu= photo.getId();
 
             albumId.setText(photo.getAlbumId());
             photo_id.setText(photo.getId());
             photo_title.setText(photo.getTitle());
-            thumbnailUrl.setImageURI(Uri.parse(photo.getThumbnailUrl()));
+
+
+            String Url = photo.getUrl();
+            Picasso.with(PhotoDetailedActivity.this).
+                load(Url).
+                placeholder(urlImage.getDrawable()).
+                resize(300,300).
+                error(R.mipmap.ic_launcher).
+                into(urlImage);
         }
     }
 }
