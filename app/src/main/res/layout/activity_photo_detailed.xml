@@ -37,12 +37,13 @@
             <ImageView
                 android:id="@+id/url"
                 android:contentDescription="@string/image"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
                 android:scaleType="centerCrop"
                 android:layout_gravity="center"
                 android:src="@mipmap/p"
                 android:layout_marginBottom="5dp"/>
+
 
             <TextView
                 android:id="@+id/album_Id"

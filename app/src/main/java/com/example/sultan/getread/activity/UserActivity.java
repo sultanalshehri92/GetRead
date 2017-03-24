@@ -31,7 +31,7 @@ public class UserActivity extends MainActivity{
     Address userAddress;
     Company userCompany;
     Geo userGeo;
-    int index, idNu;
+    int index;
     View user_tab, po_tab, photo_tab ,task_tab;
     private TextView name, username, email, address, phone, website, company;
 
@@ -58,7 +58,7 @@ public class UserActivity extends MainActivity{
         });
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.appbar);
-        toolbar.setTitle("User: " + (idNu));
+        toolbar.setTitle("User: " + (index));
         setSupportActionBar(toolbar);
 
         getTabs();
@@ -75,12 +75,11 @@ public class UserActivity extends MainActivity{
     }
 
     private void getDetails(){
-        if (getIntent().hasExtra("User")){
+        index = getIntent().getExtras().getInt("Id");
+        if (getIntent().hasExtra("User"))
             user = getIntent().getExtras().getParcelable("User");
-            index = getIntent().getExtras().getInt("Id");
-        }
+
             if (user != null){
-                idNu = user.getId();
                 userCompany = user.getCompany();
                 userAddress = user.getAddress();
                 userGeo = userAddress.getGeo();
@@ -93,7 +92,9 @@ public class UserActivity extends MainActivity{
                 company.setText(userCompany.getCompany());
                 address.setText(userAddress.getAddress());
                 address.append(userGeo.getGeo());
-            }
+            } else
+                getUser();
+
 
     }
 

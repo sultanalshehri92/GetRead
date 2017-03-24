@@ -24,7 +24,7 @@ import static java.lang.String.valueOf;
 public class PostViewHolder extends RecyclerView.ViewHolder{
 
     LinearLayout dataLayout;
-    TextView post_uId, post_id, title;
+    private TextView post_uId, post_id, title;
 
     public PostViewHolder(View itemView) {
         super(itemView);
@@ -37,7 +37,11 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
 
     public void bind(final Post item, final PostViewAdapter.OnItemClickListener listener,final Context context, final User user) {
 
+        post_id.setText("#");
+        post_id.append(valueOf(item.getId()));
         post_uId.setText(user.getName());
+        title.setText(item.getTitle());
+
         post_uId.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,8 +54,6 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
                 context.startActivity(intent);
             }
         });
-        post_id.setText(valueOf(item.getId()));
-        title.setText(item.getTitle());
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {

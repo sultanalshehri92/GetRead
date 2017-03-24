@@ -34,7 +34,7 @@ public class PhotosActivity extends AppCompatActivity {
     private TextView text;
     private RecyclerView recyclerView;
     private PhotoViewAdapter recyclerViewAdapter;
-    private List<Photo> userList;
+    private List<Photo> photoList;
     private String searchQuery = "";
     SearchView searchView;
     View user_tab, po_tab, photo_tab ,task_tab;
@@ -125,16 +125,16 @@ public class PhotosActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<Photo>>() {
             @Override
             public void onResponse(Call<List<Photo>> call, Response<List<Photo>> response) {
-                userList = response.body();
+                photoList = response.body();
                 recyclerViewAdapter = new PhotoViewAdapter
-                    (userList, R.layout.photo_view_row, PhotosActivity.this,
+                    (photoList, R.layout.photo_view_row, PhotosActivity.this,
                         new PhotoViewAdapter.OnItemClickListener() {
                             @Override
                             public void onItemClick(Photo item, int position) {
                                 Intent intent = new Intent();
                                 Bundle b = new Bundle();
-                                b.putParcelable("p", item);
-                                b.putInt("index", position);
+                                b.putParcelable("Photo", item);
+                                b.putInt("Id", position);
                                 intent.putExtras(b);
                                 intent.setClass(PhotosActivity.this, PhotoDetailedActivity.class);
                                 startActivity(intent);

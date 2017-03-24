@@ -49,7 +49,10 @@ public class PostViewAdapter extends RecyclerView.Adapter<PostViewHolder> {
 
     @Override
     public void onBindViewHolder(PostViewHolder holder, int position) {
-        holder.bind(filteredList.get(position), listener, context, u.get(filteredList.get(position).getUserId()-1));
+        holder.bind(filteredList.get(position),
+                    listener,
+                    context,
+                    u.get(filteredList.get(position).getUserId() - 1));
     }
 
     @Override
@@ -72,7 +75,7 @@ public class PostViewAdapter extends RecyclerView.Adapter<PostViewHolder> {
                     for (Post item : postList) {
                         if (item.getTitle().toLowerCase().contains(text.toLowerCase()) ||
                             item.getBody().toLowerCase().contains(text.toLowerCase()) ||
-                            u.get(item.getUserId()-1).getName().toLowerCase().contains(text.toLowerCase()) ||
+                            u.get(item.getUserId() - 1).getName().toLowerCase().contains(text.toLowerCase()) ||
                             valueOf(item.getId()).toLowerCase().contains(text.toLowerCase()))
 
                                 filteredList.add(item);

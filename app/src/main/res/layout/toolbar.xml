@@ -8,6 +8,7 @@
     android:minHeight="?attr/actionBarSize"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
     android:background="@color/colorPrimary"
-    app:popupTheme="@style/ThemeOverlay.AppCompat.Light" >
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+    android:logo="@mipmap/ic_launcher">
 
 </android.support.v7.widget.Toolbar>

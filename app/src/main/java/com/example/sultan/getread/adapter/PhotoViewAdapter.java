@@ -26,7 +26,7 @@ public class PhotoViewAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
     private OnItemClickListener listener;
 
     private List<Photo> photoList, filteredList;
-    //private List<User> u = getUserList();
+    private List<User> u = getUserList();
     private int row;
     private Context context;
 
@@ -49,8 +49,10 @@ public class PhotoViewAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
 
     @Override
     public void onBindViewHolder(PhotoViewHolder holder, int position) {
-        holder.bind(filteredList.get(position), listener, context);
-    }
+        holder.bind(filteredList.get(position),
+                listener,
+                context,
+                u.get(filteredList.get(position).getAlbumId()));    }
 
     @Override
     public int getItemCount() {

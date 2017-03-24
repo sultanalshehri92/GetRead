@@ -35,8 +35,10 @@ public class TaskViewHolder extends RecyclerView.ViewHolder{
 
     public void bind(final Task item, final TaskViewAdapter.OnItemClickListener listener, String u) {
 
+        task_id.setText("#");
+        task_id.append(valueOf(item.getId()));
+
         task_uId.setText(u);
-        task_id.setText(valueOf(item.getId()));
         task_title.setText(item.getTitle());
         task_completed.setText(item.getCompletedStatus());
         task_completed.setChecked(item.getCompleted());

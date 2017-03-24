@@ -1,11 +1,13 @@
 package com.example.sultan.getread.activity;
 
 import android.content.Intent;
+import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.os.Bundle;
 
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +29,7 @@ import static java.lang.String.valueOf;
 public class PostDetailedActivity extends PostsActivity{
 
     private SwipeRefreshLayout swipeContainer;
+
     Post post;
     int index;
     private User user;
@@ -75,9 +78,9 @@ public class PostDetailedActivity extends PostsActivity{
 
     private void getDetails(){
         if (getIntent().getExtras() != null) {
-            post = getIntent().getExtras().getParcelable("p");
-            index = getIntent().getExtras().getInt("index");
-            user = getUserList().get(post.getUserId()-1);
+            post = getIntent().getExtras().getParcelable("Post");
+            index = getIntent().getExtras().getInt("Id");
+            user = getUserList().get(index);
             post_uId.setText(user.getName());
             post_uId.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -85,13 +88,14 @@ public class PostDetailedActivity extends PostsActivity{
                     Intent intent = new Intent();
                     Bundle b = new Bundle();
                     b.putParcelable("User", user);
-                    b.putInt("Id", post.getUserId());
+                    b.putInt("Id", user.getId());
                     intent.putExtras(b);
                     intent.setClass(PostDetailedActivity.this, UserActivity.class);
                     startActivity(intent);
                 }
             });
-            post_id.setText(valueOf(post.getId()));
+            post_id.setText("#");
+            post_id.append(valueOf(post.getId()));
             title.setText(post.getTitle());
             body.setText(post.getBody());
         }

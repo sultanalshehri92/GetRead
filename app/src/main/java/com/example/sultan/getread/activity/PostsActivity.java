@@ -134,8 +134,8 @@ public class PostsActivity extends AppCompatActivity {
                             public void onItemClick(Post item, int position) {
                                 Intent intent = new Intent();
                                 Bundle b = new Bundle();
-                                b.putParcelable("p", item);
-                                b.putInt("index", position);
+                                b.putParcelable("Post", item);
+                                b.putInt("Id", position);
                                 intent.putExtras(b);
                                 intent.setClass(PostsActivity.this, PostDetailedActivity.class);
                                 startActivity(intent);
