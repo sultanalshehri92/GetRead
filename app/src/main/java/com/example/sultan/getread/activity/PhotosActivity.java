@@ -84,6 +84,7 @@ public class PhotosActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                Toast.makeText(PhotosActivity.this, "Search results for: '" + query + "'", Toast.LENGTH_LONG).show();
                 searchQuery = query;
                 getData();
                 return true;
@@ -105,7 +106,7 @@ public class PhotosActivity extends AppCompatActivity {
             case R.id.search_bar:
                 return true;
             case R.id.action_settings:
-                return true;
+                startActivity(new Intent(PhotosActivity.this, SettingsActivity.class));
             case R.id.share:
                 return true;
             default:

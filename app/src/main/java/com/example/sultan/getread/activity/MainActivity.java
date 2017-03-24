@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity{
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                Toast.makeText(MainActivity.this, "Search results for: '" + query + "'", Toast.LENGTH_LONG).show();
                 searchQuery = query;
                 getData();
                 return true;
@@ -108,7 +109,7 @@ public class MainActivity extends AppCompatActivity{
             case R.id.search_bar:
                 return true;
             case R.id.action_settings:
-                return true;
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
             case R.id.share:
                 return true;
             default:
@@ -135,8 +136,8 @@ public class MainActivity extends AppCompatActivity{
                             public void onItemClick(User item, int position) {
                                 Intent intent = new Intent();
                                 Bundle b = new Bundle();
-                                b.putParcelable("u", item);
-                                b.putInt("index", position);
+                                b.putParcelable("User", item);
+                                b.putInt("Id", item.getId());
                                 intent.putExtras(b);
                                 intent.setClass(MainActivity.this, UserActivity.class);
                                 startActivity(intent);

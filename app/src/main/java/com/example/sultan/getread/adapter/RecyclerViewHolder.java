@@ -17,7 +17,7 @@ import static java.lang.String.valueOf;
 public class RecyclerViewHolder extends RecyclerView.ViewHolder{
 
     LinearLayout dataLayout;
-    TextView name, idNu, phone;
+    private TextView name, idNu, phone;
 
     public RecyclerViewHolder(View itemView) {
         super(itemView);

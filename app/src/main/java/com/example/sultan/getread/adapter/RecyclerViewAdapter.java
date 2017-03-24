@@ -23,7 +23,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
 
     private OnItemClickListener listener;
 
-    private List<User> userList, filteredList;
+    private static List<User> userList;
+    private List<User> filteredList;
     private int row;
     private Context context;
 
@@ -90,4 +91,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewHolder
         }).start();
     }
 
+    public static List<User> getUserList() {
+        return userList;
+    }
 }

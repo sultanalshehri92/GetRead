@@ -9,10 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.sultan.getread.model.Post;
+import com.example.sultan.getread.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.sultan.getread.adapter.RecyclerViewAdapter.getUserList;
 import static java.lang.String.valueOf;
 
 /**
@@ -24,6 +26,7 @@ public class PostViewAdapter extends RecyclerView.Adapter<PostViewHolder> {
     private OnItemClickListener listener;
 
     private List<Post> postList, filteredList;
+    private List<User> u = getUserList();
     private int row;
     private Context context;
 
@@ -46,7 +49,7 @@ public class PostViewAdapter extends RecyclerView.Adapter<PostViewHolder> {
 
     @Override
     public void onBindViewHolder(PostViewHolder holder, int position) {
-        holder.bind(filteredList.get(position), listener);
+        holder.bind(filteredList.get(position), listener, context, u.get(filteredList.get(position).getUserId()-1));
     }
 
     @Override
@@ -69,7 +72,7 @@ public class PostViewAdapter extends RecyclerView.Adapter<PostViewHolder> {
                     for (Post item : postList) {
                         if (item.getTitle().toLowerCase().contains(text.toLowerCase()) ||
                             item.getBody().toLowerCase().contains(text.toLowerCase()) ||
-                            valueOf(item.getUserId()).toLowerCase().contains(text.toLowerCase()) ||
+                            u.get(item.getUserId()-1).getName().toLowerCase().contains(text.toLowerCase()) ||
                             valueOf(item.getId()).toLowerCase().contains(text.toLowerCase()))
 
                                 filteredList.add(item);

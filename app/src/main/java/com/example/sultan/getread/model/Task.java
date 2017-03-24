@@ -25,10 +25,14 @@ public class Task {
     public String getTitle() {
         return title;
     }
-    public String getCompleted() {
-        if (completed)
-            return "done";
-        else
-            return "todo";
+    public Boolean getCompleted() {
+        return completed;
     }
+    public String getCompletedStatus() {
+        if (completed)
+            return "Done";
+        else
+            return "Todo";
+    }
+
 }

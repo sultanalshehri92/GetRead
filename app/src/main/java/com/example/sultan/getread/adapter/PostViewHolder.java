@@ -1,12 +1,18 @@
 package com.example.sultan.getread.adapter;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.sultan.getread.R;
+import com.example.sultan.getread.activity.PostsActivity;
+import com.example.sultan.getread.activity.UserActivity;
 import com.example.sultan.getread.model.Post;
+import com.example.sultan.getread.model.User;
 
 import static java.lang.String.valueOf;
 
@@ -29,9 +35,21 @@ public class PostViewHolder extends RecyclerView.ViewHolder{
         title = (TextView) itemView.findViewById(R.id.title);
     }
 
-    public void bind(final Post item, final PostViewAdapter.OnItemClickListener listener) {
+    public void bind(final Post item, final PostViewAdapter.OnItemClickListener listener,final Context context, final User user) {
 
-        post_uId.setText(valueOf(item.getUserId()));
+        post_uId.setText(user.getName());
+        post_uId.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                Bundle b = new Bundle();
+                b.putParcelable("User", user);
+                b.putInt("Id", item.getUserId());
+                intent.putExtras(b);
+                intent.setClass(context, UserActivity.class);
+                context.startActivity(intent);
+            }
+        });
         post_id.setText(valueOf(item.getId()));
         title.setText(item.getTitle());
 

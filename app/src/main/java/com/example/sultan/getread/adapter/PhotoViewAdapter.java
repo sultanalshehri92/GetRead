@@ -9,10 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.sultan.getread.model.Photo;
+import com.example.sultan.getread.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.sultan.getread.adapter.RecyclerViewAdapter.getUserList;
 import static java.lang.String.valueOf;
 
 /**
@@ -24,8 +26,9 @@ public class PhotoViewAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
     private OnItemClickListener listener;
 
     private List<Photo> photoList, filteredList;
+    //private List<User> u = getUserList();
     private int row;
-    Context context;
+    private Context context;
 
     public PhotoViewAdapter(List<Photo> item, int row, Context context, OnItemClickListener listener) {
         this.photoList = item;

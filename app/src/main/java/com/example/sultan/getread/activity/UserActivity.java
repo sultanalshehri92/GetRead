@@ -1,6 +1,7 @@
 package com.example.sultan.getread.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.os.Bundle;
 
@@ -49,8 +50,15 @@ public class UserActivity extends MainActivity{
 
         getDetails();
 
+        website.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openWebPage(user.getWebsite());
+            }
+        });
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.appbar);
-        toolbar.setTitle("User: " + (idNu + 1));
+        toolbar.setTitle("User: " + (idNu));
         setSupportActionBar(toolbar);
 
         getTabs();
@@ -59,49 +67,55 @@ public class UserActivity extends MainActivity{
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-            APIService service = ApiClient.getRetrofit().create(APIService.class);
-            Call<User> call = service.getUser(index);
-            call.enqueue(new Callback<User>() {
-                @Override
-                public void onResponse(Call<User> call, Response<User> response) {
-                    getDetails();
-                    Toast.makeText(UserActivity.this, "Updated", Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onFailure(Call<User> call, Throwable t) {
-                    Toast.makeText(UserActivity.this, "Failed", Toast.LENGTH_LONG).show();
-                    username.setText(t.toString());
-                }
-            });
-            swipeContainer.setRefreshing(false);
+                getUser();
+                swipeContainer.setRefreshing(false);
+                Toast.makeText(UserActivity.this, "Updated", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void getDetails(){
-        if (getIntent().getExtras() != null) {
-            user = getIntent().getExtras().getParcelable("u");
-            index = getIntent().getExtras().getInt("index");
-            idNu = user.getId();
-
-            userCompany = user.getCompany();
-            userAddress = user.getAddress();
-            userGeo = userAddress.getGeo();
-
-            name.setText(user.getName());
-            phone.setText(user.getPhone());
-            username.setText(user.getUsername());
-            email.setText(user.getEmail());
-            website.setText(user.getWebsite());
-            company.setText(userCompany.getCompany());
-            address.setText(userAddress.getAddress());
-            address.append(userGeo.getGeo());
+        if (getIntent().hasExtra("User")){
+            user = getIntent().getExtras().getParcelable("User");
+            index = getIntent().getExtras().getInt("Id");
         }
+            if (user != null){
+                idNu = user.getId();
+                userCompany = user.getCompany();
+                userAddress = user.getAddress();
+                userGeo = userAddress.getGeo();
+
+                name.setText(user.getName());
+                phone.setText(user.getPhone());
+                username.setText(user.getUsername());
+                email.setText(user.getEmail());
+                website.setText(user.getWebsite());
+                company.setText(userCompany.getCompany());
+                address.setText(userAddress.getAddress());
+                address.append(userGeo.getGeo());
+            }
+
+    }
+
+    private void getUser(){
+        APIService service = ApiClient.getRetrofit().create(APIService.class);
+        Call<User> call = service.getUser(index);
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response){
+                getDetails();
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Toast.makeText(UserActivity.this, "Failed", Toast.LENGTH_LONG).show();
+                username.setText(t.toString());
+            }
+        });
     }
 
     private void getTabs(){
-        user_tab = (View) findViewById(R.id.user_tab);
+        user_tab = findViewById(R.id.user_tab);
         user_tab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,7 +125,7 @@ public class UserActivity extends MainActivity{
             }
         });
 
-        po_tab = (View) findViewById(R.id.po_tab);
+        po_tab = findViewById(R.id.po_tab);
         po_tab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,7 +135,7 @@ public class UserActivity extends MainActivity{
             }
         });
 
-        photo_tab = (View) findViewById(R.id.photo_tab);
+        photo_tab = findViewById(R.id.photo_tab);
         photo_tab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,7 +145,7 @@ public class UserActivity extends MainActivity{
             }
         });
 
-        task_tab = (View) findViewById(R.id.task_tab);
+        task_tab = findViewById(R.id.task_tab);
         task_tab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,4 +156,13 @@ public class UserActivity extends MainActivity{
         });
     }
 
+    public void openWebPage(String url) {
+        String webpage = url;
+        if (!url.startsWith("http://") && !url.startsWith("https://"))
+            webpage = "http://" + url;
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(webpage));
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
 }

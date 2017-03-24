@@ -11,13 +11,17 @@ import android.widget.Toast;
 
 import com.example.sultan.getread.R;
 import com.example.sultan.getread.model.Post;
+import com.example.sultan.getread.model.User;
 import com.example.sultan.getread.network.ApiClient;
 import com.example.sultan.getread.service.APIService;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.example.sultan.getread.adapter.RecyclerViewAdapter.getUserList;
 import static java.lang.String.valueOf;
 
 public class PostDetailedActivity extends PostsActivity{
@@ -25,6 +29,7 @@ public class PostDetailedActivity extends PostsActivity{
     private SwipeRefreshLayout swipeContainer;
     Post post;
     int index;
+    private User user;
     View user_tab, po_tab, photo_tab ,task_tab;
     TextView post_uId, post_id, title, body;
 
@@ -72,8 +77,20 @@ public class PostDetailedActivity extends PostsActivity{
         if (getIntent().getExtras() != null) {
             post = getIntent().getExtras().getParcelable("p");
             index = getIntent().getExtras().getInt("index");
-
-            post_uId.setText(valueOf(post.getUserId()));
+            user = getUserList().get(post.getUserId()-1);
+            post_uId.setText(user.getName());
+            post_uId.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    Bundle b = new Bundle();
+                    b.putParcelable("User", user);
+                    b.putInt("Id", post.getUserId());
+                    intent.putExtras(b);
+                    intent.setClass(PostDetailedActivity.this, UserActivity.class);
+                    startActivity(intent);
+                }
+            });
             post_id.setText(valueOf(post.getId()));
             title.setText(post.getTitle());
             body.setText(post.getBody());

@@ -32,6 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
                 android:textStyle="bold"
+                android:textIsSelectable="true"
                 android:textColor="@color/colorBlack"
                 android:textSize="16sp" />
 
@@ -40,13 +41,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
+                android:textIsSelectable="true"
                 android:textColor="@color/colorBlack"
                 android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/task_title"
                 android:layout_width="wrap_content"
+                android:textIsSelectable="true"
                 android:layout_height="wrap_content"
+                android:textSize="16sp"
                 android:textColor="@color/colorGreyLight" />
 
         </LinearLayout>
@@ -57,13 +61,16 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
+            <CheckBox
                 android:id="@+id/task_completed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
+                android:enabled="false"
+                android:checkMark="?android:attr/listChoiceIndicatorMultiple"
                 android:textColor="@color/colorBlack"
                 android:textSize="16sp" />
+
         </LinearLayout>
 
     </LinearLayout>

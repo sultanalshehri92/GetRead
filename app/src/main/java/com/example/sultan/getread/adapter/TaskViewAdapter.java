@@ -9,10 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.sultan.getread.model.Task;
+import com.example.sultan.getread.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.sultan.getread.adapter.RecyclerViewAdapter.getUserList;
 import static java.lang.String.valueOf;
 
 /**
@@ -24,6 +26,7 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewHolder> {
     private OnItemClickListener listener;
 
     private List<Task> taskList, filteredList;
+    private List<User> u = getUserList();
     private int row;
     private Context context;
 
@@ -46,7 +49,7 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewHolder> {
 
     @Override
     public void onBindViewHolder(TaskViewHolder holder, int position) {
-        holder.bind(filteredList.get(position), listener);
+        holder.bind(filteredList.get(position), listener, u.get(filteredList.get(position).getUserId()-1).getName());
     }
 
     @Override
@@ -68,8 +71,8 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewHolder> {
                 } else {
                     for (Task item : taskList) {
                         if (item.getTitle().toLowerCase().contains(text.toLowerCase()) ||
-                            item.getCompleted().toLowerCase().contains(text.toLowerCase())||
-                            valueOf(item.getUserId()).toLowerCase().contains(text.toLowerCase()) ||
+                            item.getCompletedStatus().toLowerCase().contains(text.toLowerCase())||
+                            u.get(item.getUserId()-1).getName().toLowerCase().contains(text.toLowerCase()) ||
                             valueOf(item.getId()).toLowerCase().contains(text.toLowerCase()))
 
                                 filteredList.add(item);

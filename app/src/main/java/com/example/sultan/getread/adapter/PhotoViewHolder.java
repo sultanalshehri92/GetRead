@@ -1,6 +1,8 @@
 package com.example.sultan.getread.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -8,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.sultan.getread.R;
+import com.example.sultan.getread.activity.MainActivity;
+import com.example.sultan.getread.activity.UserActivity;
 import com.example.sultan.getread.model.Photo;
 import com.squareup.picasso.Picasso;
 
@@ -33,7 +37,7 @@ public class PhotoViewHolder extends RecyclerView.ViewHolder{
         thumbnail = (ImageView) itemView.findViewById(R.id.thumbnailUrl);
     }
 
-    public void bind(final Photo item, final PhotoViewAdapter.OnItemClickListener listener, Context context) {
+    public void bind(final Photo item, final PhotoViewAdapter.OnItemClickListener listener, final Context context) {
 
         album_id.setText(valueOf(item.getAlbumId()));
         photo_id.setText(valueOf(item.getId()));
