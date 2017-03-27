@@ -57,6 +57,7 @@ public class PhotosActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.appbar);
         toolbar.setTitle("Photos");
+        toolbar.setLogo(R.mipmap.ic_launcher);
         setSupportActionBar(toolbar);
 
         getTabs();
@@ -84,7 +85,7 @@ public class PhotosActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(PhotosActivity.this, "Search results for: '" + query + "'", Toast.LENGTH_LONG).show();
+                Toast.makeText(PhotosActivity.this, "Search results for: '" + query + "'", Toast.LENGTH_SHORT).show();
                 searchQuery = query;
                 getData();
                 return true;
@@ -149,7 +150,7 @@ public class PhotosActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Photo>> call, Throwable t) {
-                Toast.makeText(PhotosActivity.this, "Faild", Toast.LENGTH_LONG).show();
+                Toast.makeText(PhotosActivity.this, "Faild", Toast.LENGTH_SHORT).show();
                 text.setText(t.toString());
             }
         });

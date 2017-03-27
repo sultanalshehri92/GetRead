@@ -59,6 +59,7 @@ public class UserActivity extends MainActivity{
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.appbar);
         toolbar.setTitle("User: " + (index));
+        toolbar.setLogo(R.mipmap.ic_launcher);
         setSupportActionBar(toolbar);
 
         getTabs();

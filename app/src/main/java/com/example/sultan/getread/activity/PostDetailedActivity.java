@@ -41,17 +41,20 @@ public class PostDetailedActivity extends PostsActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_detailed);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.appbar);
-        setSupportActionBar(toolbar);
-
-        getTabs();
-
         post_uId = (TextView)findViewById(R.id.post_uId);
         post_id = (TextView)findViewById(R.id.post_id);
         title = (TextView)findViewById(R.id.title);
         body = (TextView)findViewById(R.id.body);
 
         getDetails();
+
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.appbar);
+        toolbar.setTitle("Post: " + valueOf(post.getId()));
+        toolbar.setLogo(R.mipmap.ic_launcher);
+        setSupportActionBar(toolbar);
+
+        getTabs();
 
         swipeContainer = (SwipeRefreshLayout)findViewById(R.id.activity_post_detailed);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -68,7 +71,7 @@ public class PostDetailedActivity extends PostsActivity{
 
                     @Override
                     public void onFailure(Call<Post> call, Throwable t) {
-                        Toast.makeText(PostDetailedActivity.this, "Failed", Toast.LENGTH_LONG).show();
+                        Toast.makeText(PostDetailedActivity.this, "Failed", Toast.LENGTH_SHORT).show();
                     }
                 });
                 swipeContainer.setRefreshing(false);

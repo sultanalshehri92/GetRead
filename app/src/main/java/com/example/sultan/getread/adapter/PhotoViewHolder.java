@@ -60,7 +60,13 @@ class PhotoViewHolder extends RecyclerView.ViewHolder{
         photo_title.setText(title);
 
         String thumbnailUrl = item.getThumbnailUrl();
-        thumbnailUrl = new StringBuilder(thumbnailUrl).insert(4,"s").toString();
+        if (!thumbnailUrl.startsWith("https://")){
+
+            if (thumbnailUrl.startsWith("http://"))
+                thumbnailUrl = new StringBuilder(thumbnailUrl).insert(4, "s").toString();
+            else
+                thumbnailUrl = new StringBuilder(thumbnailUrl).insert(0, "https://").toString();
+        }
 
         Picasso.with(context)
             .load(thumbnailUrl)

@@ -59,6 +59,7 @@ public class PostsActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.appbar);
         toolbar.setTitle("Posts");
+        toolbar.setLogo(R.mipmap.ic_launcher);
         setSupportActionBar(toolbar);
 
         getTabs();
@@ -85,7 +86,7 @@ public class PostsActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(PostsActivity.this, "Search results for: '" + query + "'", Toast.LENGTH_LONG).show();
+                Toast.makeText(PostsActivity.this, "Search results for: '" + query + "'", Toast.LENGTH_SHORT).show();
                 searchQuery = query;
                 getData();
                 return true;
@@ -150,7 +151,7 @@ public class PostsActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Post>> call, Throwable t) {
-                Toast.makeText(PostsActivity.this, "Faild", Toast.LENGTH_LONG).show();
+                Toast.makeText(PostsActivity.this, "Faild", Toast.LENGTH_SHORT).show();
                 text.setText(t.toString());
             }
 
@@ -197,6 +198,7 @@ public class PostsActivity extends AppCompatActivity {
             pDialog.show();
         pDialog.setMessage("Loading...");
     }
+
     private void hidepDialog() {
         if (pDialog.isShowing())
             pDialog.dismiss();

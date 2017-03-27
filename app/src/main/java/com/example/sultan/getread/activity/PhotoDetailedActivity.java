@@ -40,16 +40,17 @@ public class PhotoDetailedActivity extends PhotosActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_detailed);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.appbar);
-        toolbar.setTitle("Photo: " + (index));
-        setSupportActionBar(toolbar);
-
         albumId = (TextView)findViewById(R.id.album_Id);
         photo_id = (TextView)findViewById(R.id.photoId);
         photo_title = (TextView)findViewById(R.id.photoTitle);
         urlImage = (ImageView)findViewById(R.id.url);
 
         getDetails();
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.appbar);
+        toolbar.setTitle("Photo: " + valueOf(photo.getId()));
+        toolbar.setLogo(R.mipmap.ic_launcher);
+        setSupportActionBar(toolbar);
 
         swipeContainer = (SwipeRefreshLayout)findViewById(R.id.activity_photo_detailed);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -80,11 +81,17 @@ public class PhotoDetailedActivity extends PhotosActivity {
                      startActivity(intent);
                 }
             });
-            photo_id.setText(valueOf(photo.getId()));
+            //photo_id.setText(valueOf(photo.getId()));
             photo_title.setText(photo.getTitle());
 
             String thumbnailUrl = photo.getUrl();
-            thumbnailUrl = new StringBuilder(thumbnailUrl).insert(4,"s").toString();
+            if (!thumbnailUrl.startsWith("https://")){
+
+                if (thumbnailUrl.startsWith("http://"))
+                    thumbnailUrl = new StringBuilder(thumbnailUrl).insert(4, "s").toString();
+                else
+                    thumbnailUrl = new StringBuilder(thumbnailUrl).insert(0, "https://").toString();
+            }
 
             Picasso.with(PhotoDetailedActivity.this).
                     load(thumbnailUrl).

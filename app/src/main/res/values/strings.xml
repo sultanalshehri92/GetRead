@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">GetRead</string>
     <string name="image">Photo</string>
+    <string name="search_hint">Search here</string>
+    <string name="search_title">Search</string>
+    <string name="setting_title">Settings</string>
+    <string name="share_title">Share</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->

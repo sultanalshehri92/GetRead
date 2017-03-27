@@ -49,7 +49,10 @@ public class TaskViewAdapter extends RecyclerView.Adapter<TaskViewHolder> {
 
     @Override
     public void onBindViewHolder(TaskViewHolder holder, int position) {
-        holder.bind(filteredList.get(position), listener, u.get(filteredList.get(position).getUserId()-1).getName());
+        holder.bind(filteredList.get(position),
+                listener,
+                context,
+                u.get(filteredList.get(position).getUserId() - 1));
     }
 
     @Override

@@ -1,5 +1,8 @@
 package com.example.sultan.getread.adapter;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CheckBox;
@@ -8,7 +11,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.sultan.getread.R;
+import com.example.sultan.getread.activity.UserActivity;
 import com.example.sultan.getread.model.Task;
+import com.example.sultan.getread.model.User;
 
 import static java.lang.String.valueOf;
 
@@ -33,12 +38,23 @@ public class TaskViewHolder extends RecyclerView.ViewHolder{
         task_completed = (CheckBox) itemView.findViewById(R.id.task_completed);
     }
 
-    public void bind(final Task item, final TaskViewAdapter.OnItemClickListener listener, String u) {
+    public void bind(final Task item, final TaskViewAdapter.OnItemClickListener listener, final Context context, final User user) {
 
         task_id.setText("#");
         task_id.append(valueOf(item.getId()));
-
-        task_uId.setText(u);
+        task_uId.setText(user.getName());
+        task_uId.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                Bundle b = new Bundle();
+                b.putParcelable("User", user);
+                b.putInt("Id", item.getUserId());
+                intent.putExtras(b);
+                intent.setClass(context, UserActivity.class);
+                context.startActivity(intent);
+            }
+        });
         task_title.setText(item.getTitle());
         task_completed.setText(item.getCompletedStatus());
         task_completed.setChecked(item.getCompleted());

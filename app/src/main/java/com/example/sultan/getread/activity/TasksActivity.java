@@ -58,6 +58,7 @@ public class TasksActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.appbar);
         toolbar.setTitle("Tasks");
+        toolbar.setLogo(R.mipmap.ic_launcher);
         setSupportActionBar(toolbar);
 
         getTabs();
@@ -85,7 +86,7 @@ public class TasksActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(TasksActivity.this, "Search results for: '" + query + "'", Toast.LENGTH_LONG).show();
+                Toast.makeText(TasksActivity.this, "Search results for: '" + query + "'", Toast.LENGTH_SHORT).show();
                 searchQuery = query;
                 getData();
                 return true;
@@ -141,7 +142,7 @@ public class TasksActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Task>> call, Throwable t) {
-                Toast.makeText(TasksActivity.this, "Faild", Toast.LENGTH_LONG).show();
+                Toast.makeText(TasksActivity.this, "Faild", Toast.LENGTH_SHORT).show();
                 text.setText(t.toString());
             }
 

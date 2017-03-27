@@ -52,7 +52,7 @@ public class PhotoViewAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
         holder.bind(filteredList.get(position),
                 listener,
                 context,
-                u.get(filteredList.get(position).getAlbumId()));    }
+                u.get(filteredList.get(position).getAlbumId()-1));    }
 
     @Override
     public int getItemCount() {

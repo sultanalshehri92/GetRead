@@ -60,7 +60,9 @@ public class MainActivity extends AppCompatActivity{
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.appbar);
         toolbar.setTitle("Users");
+        toolbar.setLogo(R.mipmap.ic_launcher);
         setSupportActionBar(toolbar);
+
 
         getTabs();
 
